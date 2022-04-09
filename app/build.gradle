@@ -6,6 +6,15 @@ plugins {
 android {
     compileSdk 30
 
+    signingConfigs {
+        release {
+            storeFile file("poc")
+            storePassword "123456"
+            keyAlias "poc"
+            keyPassword "123456"
+        }
+    }
+
     defaultConfig {
         applicationId "br.com.newsoftwarebrasil.pocsmsretriever"
         minSdk 21
@@ -23,6 +32,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     flavorDimensions "default"

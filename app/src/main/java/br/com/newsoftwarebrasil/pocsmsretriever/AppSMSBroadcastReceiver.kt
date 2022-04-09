@@ -1,38 +1,35 @@
-package br.com.newsoftwarebrasil.pocsmsretriever;
+package br.com.newsoftwarebrasil.pocsmsretriever
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
+import android.content.BroadcastReceiver
+import android.content.Context
+import br.com.newsoftwarebrasil.pocsmsretriever.AppSMSBroadcastReceiver.OnSmsReceiveListener
+import android.content.Intent
+import com.google.android.gms.auth.api.phone.SmsRetriever
+import android.os.Bundle
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.common.api.Status
 
-import com.google.android.gms.auth.api.phone.SmsRetriever;
-import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.common.api.Status;
-
-public class AppSMSBroadcastReceiver extends BroadcastReceiver {
-    private OnSmsReceiveListener onSmsReceiveListener;
-    public void setOnSmsReceiveListener(OnSmsReceiveListener onSmsReceiveListener) {
-        this.onSmsReceiveListener = onSmsReceiveListener;
+class AppSMSBroadcastReceiver : BroadcastReceiver() {
+    private var onSmsReceiveListener: OnSmsReceiveListener? = null
+    fun setOnSmsReceiveListener(onSmsReceiveListener: OnSmsReceiveListener?) {
+        this.onSmsReceiveListener = onSmsReceiveListener
     }
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        if (SmsRetriever.SMS_RETRIEVED_ACTION.equals(intent.getAction())) {
-            Bundle extras = intent.getExtras();
-            Status status = (Status) extras.get(SmsRetriever.EXTRA_STATUS);
-
-            switch (status.getStatusCode()) {
-                case CommonStatusCodes.SUCCESS:
-                    String message = (String) extras.get(SmsRetriever.EXTRA_SMS_MESSAGE);
-                    onSmsReceiveListener.onReceive(message);
-                    break;
-                case CommonStatusCodes.TIMEOUT:
-                    break;
+    override fun onReceive(context: Context, intent: Intent) {
+        if (SmsRetriever.SMS_RETRIEVED_ACTION == intent.action) {
+            val extras = intent.extras
+            val status = extras!![SmsRetriever.EXTRA_STATUS] as Status?
+            when (status!!.statusCode) {
+                CommonStatusCodes.SUCCESS -> {
+                    val message = extras[SmsRetriever.EXTRA_SMS_MESSAGE] as String?
+                    onSmsReceiveListener!!.onReceive(message)
+                }
+                CommonStatusCodes.TIMEOUT -> {}
             }
         }
     }
 
-    public interface OnSmsReceiveListener {
-        void onReceive(String code);
+    interface OnSmsReceiveListener {
+        fun onReceive(code: String?)
     }
 }

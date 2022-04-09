@@ -1,16 +1,18 @@
-package br.com.newsoftwarebrasil.pocsmsretriever;
+package br.com.newsoftwarebrasil.pocsmsretriever
 
-import android.app.Application;
-import android.util.Log;
+import android.app.Application
+import android.util.Log
 
-public class MyApplication extends Application {
-    private static final String TAG = "MyApplication";
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        AppSignatureHelper appSignature = new AppSignatureHelper(this);
-        for (String signature : appSignature.getAppSignatures()) {
-            Log.e(TAG, "onCreate: " + signature );
+class MyApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        val appSignature = AppSignatureHelper(this)
+        for (signature in appSignature.appSignatures) {
+            Log.e(TAG, "onCreate: $signature")
         }
+    }
+
+    companion object {
+        private const val TAG = "MyApplication"
     }
 }
