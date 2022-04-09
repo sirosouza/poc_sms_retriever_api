@@ -25,9 +25,9 @@ class MainActivity : AppCompatActivity() {
     private fun initBroadCast() {
         intentFilter = IntentFilter("com.google.android.gms.auth.api.phone.SMS_RETRIEVED")
         appSMSBroadcastReceiver = AppSMSBroadcastReceiver()
-        appSMSBroadcastReceiver!!.setOnSmsReceiveListener { code ->
+        appSMSBroadcastReceiver?.setOnSmsReceiveListener { code ->
             Toast.makeText(
-                this@MainActivity,
+                baseContext,
                 code,
                 Toast.LENGTH_SHORT
             ).show()
